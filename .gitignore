@@ -1,0 +1,3 @@
+# files to ignore
+/backend/venv/*
+/backend/*/__pycache__/*
