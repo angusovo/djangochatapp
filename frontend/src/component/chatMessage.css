@@ -7,8 +7,12 @@
   justify-content: space-between;
 }
 
+.message:hover > .avtar {
+  background-color: rgb(72, 138, 199);
+}
+
 .avtar {
-  width: 15%;
+  width: 100%;
   height: 100%;
   background-color: lightgray;
   display: flex;
@@ -23,7 +27,6 @@
 
 .content {
   width: 80%;
-  /* background-color: antiquewhite; */
   margin-left: 10px;
   display: flex;
   flex-direction: column;
@@ -31,7 +34,6 @@
 }
 
 .content > .contentSender {
-  /* background-color: red; */
   height: 30%;
   display: flex;
   justify-content: start;
@@ -55,6 +57,75 @@
 }
 
 .content > .messageTime {
+  display: flex;
+  height: 10%;
+  justify-content: end;
+  align-items: center;
+  font-size: 0.75rem;
+}
+
+/* alt message with gray blackground */
+.message_alt {
+  max-width: 100%;
+  height: 15%;
+  padding: 15px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: rgb(238, 235, 235);
+}
+.message_alt:hover > .avtar {
+  background-color: rgb(72, 138, 199);
+  transition: 0.4s;
+}
+.avtar {
+  width: 15%;
+  height: 100%;
+  background-color: lightgray;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.avtar > p {
+  color: white;
+  font-weight: bold;
+}
+
+.content_alt {
+  width: 80%;
+  /* background-color: antiquewhite; */
+  margin-left: 10px;
+  display: flex;
+  flex-direction: column;
+  padding: 5px 5px 10px 5px;
+}
+
+.content_alt > .contentSender {
+  /* background-color: red; */
+  height: 30%;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  color: gray;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.content_alt > .contentSender > p {
+  margin: 0;
+}
+
+.content_alt > .messageContent {
+  display: flex;
+  justify-content: start;
+  align-items: flex-start;
+  height: 60%;
+  color: black;
+  font-size: 0.9rem;
+}
+
+.content_alt > .messageTime {
   display: flex;
   height: 10%;
   justify-content: end;
