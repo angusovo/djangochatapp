@@ -1,0 +1,27 @@
+.chatroom {
+  height: 80vh;
+  background-color: #292a2d;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.chatroomContainer {
+  width: 40%;
+  height: 80%;
+  background-color: white;
+  border-radius: 10px;
+}
+
+.chatroomHeader {
+  border-radius: 10px 10px 0px 0px;
+  height: 10%;
+  background-color: rgb(72, 138, 199);
+  color: white;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  font-size: 1.5rem;
+  padding-left: 15px;
+  font-weight: bold;
+}

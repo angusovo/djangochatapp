@@ -1,0 +1,63 @@
+.message {
+  max-width: 100%;
+  height: 15%;
+  padding: 15px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.avtar {
+  width: 15%;
+  height: 100%;
+  background-color: lightgray;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.avtar > p {
+  color: white;
+  font-weight: bold;
+}
+
+.content {
+  width: 80%;
+  /* background-color: antiquewhite; */
+  margin-left: 10px;
+  display: flex;
+  flex-direction: column;
+  padding: 5px 5px 10px 5px;
+}
+
+.content > .contentSender {
+  /* background-color: red; */
+  height: 30%;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  color: gray;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.content > .contentSender > p {
+  margin: 0;
+}
+
+.content > .messageContent {
+  display: flex;
+  justify-content: start;
+  align-items: flex-start;
+  height: 60%;
+  color: black;
+  font-size: 0.9rem;
+}
+
+.content > .messageTime {
+  display: flex;
+  height: 10%;
+  justify-content: end;
+  align-items: center;
+  font-size: 0.75rem;
+}

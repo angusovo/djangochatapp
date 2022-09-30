@@ -25,4 +25,5 @@ urlpatterns = [
     re_path(r'^api/user/$',views.userApi),
     re_path(r'^api/message/$',views.messageApi),
     re_path(r'^api/room/$',views.roomApi),
+    path('api/chat/', include('chat.urls'))
 ]
