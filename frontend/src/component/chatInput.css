@@ -1,13 +1,15 @@
 .chatInput {
+  height: 10%;
+}
+.chatInput > form {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  height: 10%;
   border-top: 1px solid lightgray;
+  height: 100%;
 }
-
-.chatInput > .inputBar {
+.chatInput > form > .inputBar {
   flex: 0.8;
   border: 0;
   height: 50%;
@@ -15,10 +17,10 @@
   padding: 10px;
   /* border-right: 1px solid lightgray; */
 }
-.chatInput > input:focus {
+.chatInput > form > input:focus {
   outline: none;
 }
-.chatInput > .sendButton {
+.chatInput > form > .sendButton {
   flex: 0.2;
   height: 100%;
   border: none;
@@ -26,6 +28,6 @@
   background-color: transparent;
 }
 
-.chatInput > .sendButton:hover {
+.chatInput > form > .sendButton:hover {
   cursor: pointer;
 }

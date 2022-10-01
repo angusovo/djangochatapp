@@ -8,9 +8,9 @@ class User(models.Model):
     dname = models.CharField(max_length=32)
 
 class Message(models.Model):
-    content = models.CharField(max_length=500)
-    createAt = models.DateField()
-    room = models.TextField()
+    message = models.CharField(max_length=500)
+    createAt = models.DateTimeField()
+    sender = models.CharField(max_length=32)
     _id = models.AutoField(primary_key=True)
 
 class Room(models.Model):

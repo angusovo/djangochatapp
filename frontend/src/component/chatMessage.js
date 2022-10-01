@@ -1,7 +1,6 @@
 import "./chatMessage.css";
 import Avtar from "../asset/avtar.png";
 function ChatMessage(props) {
-  console.log(props);
   if (props.id % 2 == 0) {
     return (
       <div className="message">
