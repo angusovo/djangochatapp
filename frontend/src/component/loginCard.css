@@ -1,0 +1,26 @@
+.loginCard {
+  height: 40vh;
+  background-color: #292a2d;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.loginCardContainer {
+  background-color: white;
+  border-radius: 10px;
+  height: 40vh;
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.loginCardContainer > input {
+  /* border: none; */
+  height: 15%;
+  margin: 15px;
+  font-size: 1.5rem;
+  width: 100%;
+}
