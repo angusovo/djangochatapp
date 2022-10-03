@@ -2,20 +2,31 @@ import ChatInput from "./chatInput";
 import ChatMessage from "./chatMessage";
 import "./chatroom.css";
 
-function Chatroom() {
+import { useRef, useEffect } from "react";
+import { client } from "../Socket";
+function Chatroom({ messages }) {
+  const chatListRef = useRef(null);
+
+  useEffect(() => {
+    const scroll =
+      chatListRef.current.scrollHeight - chatListRef.current.clientHeight;
+    chatListRef.current.scrollTo(0, scroll);
+  }, [messages]);
+  const renderChatMsg = messages.map((msg, id) => (
+    <ChatMessage
+      key={id}
+      id={id}
+      createAt={msg.createAt}
+      sender={msg.sender}
+      message={msg.message}
+    />
+  ));
   return (
     <div className="chatroom">
       <div className="chatroomContainer">
         <div className="chatroomHeader">Chat Room #</div>
-        <div className="chatroomList">
-          <ChatMessage />
-          <ChatMessage id={2} />
-          <ChatMessage />
-          <ChatMessage id={2} />
-          <ChatMessage />
-          <ChatMessage id={2} />
-          <ChatMessage />
-          <ChatMessage id={2} />
+        <div className="chatroomList" ref={chatListRef}>
+          {renderChatMsg}
         </div>
         <ChatInput />
       </div>

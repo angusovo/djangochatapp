@@ -3,7 +3,8 @@ import { useState } from "react";
 function LoginCard() {
   let onSumbit = (e) => {
     e.preventDefault();
-    console.log("123");
+    localStorage.setItem("uname", loginName);
+    window.location.reload();
   };
   let handleChange = (e) => {
     setloginName(e.target.value);
