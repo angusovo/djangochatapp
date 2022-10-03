@@ -3,7 +3,6 @@ import ChatMessage from "./chatMessage";
 import "./chatroom.css";
 
 import { useRef, useEffect } from "react";
-import { client } from "../Socket";
 function Chatroom({ messages }) {
   const chatListRef = useRef(null);
 

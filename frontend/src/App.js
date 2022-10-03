@@ -5,16 +5,12 @@ import LoginCard from "./component/loginCard";
 import { useState, useEffect, useCallback } from "react";
 import { client } from "./Socket";
 import { getAllMessage } from "./ApiHelper";
-import axios from "axios";
 function App() {
   const [room, setRoom] = useState({
     messages: [],
   });
   const [isLoggedIn, setisLoggedIn] = useState(false);
 
-  const messages = () => {
-    getAllMessage().then((res) => {});
-  };
   useEffect(() => {
     client.onopen = () => {
       console.log("WebSocket Client Connected");
@@ -38,7 +34,7 @@ function App() {
     return () => {};
   }, [room]);
 
-  const test = useCallback(async () => {
+  const fetchMessage = useCallback(async () => {
     let data = await getAllMessage();
     setRoom((state) => ({
       messages: data,
@@ -46,7 +42,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    test();
+    fetchMessage();
     let uname = localStorage.getItem("uname");
     if (uname) {
       setisLoggedIn(true);
