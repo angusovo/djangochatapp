@@ -1,7 +1,6 @@
 import "./chatInput.css";
 import { client } from "../Socket";
 import { useState } from "react";
-import axios from "axios";
 import { saveMessage } from "../ApiHelper";
 function ChatInput() {
   const [input, setInput] = useState("");

@@ -2,7 +2,7 @@ import "./loginCard.css";
 import { useState } from "react";
 function LoginCard() {
   let onSumbit = (e) => {
-    if (loginName != "") {
+    if (loginName !== "") {
       e.preventDefault();
       localStorage.setItem("uname", loginName);
       window.location.reload();
