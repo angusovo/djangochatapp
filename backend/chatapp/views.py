@@ -49,7 +49,8 @@ def messageApi(request, format=None):
         messages_serializer = MessageSerializer(messages,many= True)
         return JsonResponse(messages_serializer.data,safe=False)
     if request.method == 'POST':
-        data = json.loads(request.body)
+        body = json.loads(request.body)
+        data = body['body']
         messages = Message.objects.all()
         messages_serializer = MessageSerializer(messages,many= True)
         Message.objects.create(message = data['message'], sender = data['sender'], createAt = datetime.now().isoformat())

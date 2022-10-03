@@ -2,6 +2,7 @@ import "./chatInput.css";
 import { client } from "../Socket";
 import { useState } from "react";
 import axios from "axios";
+import { saveMessage } from "../ApiHelper";
 function ChatInput() {
   const [input, setInput] = useState("");
 
@@ -10,15 +11,14 @@ function ChatInput() {
     setInput(e.target.value);
   };
   const handleSubmit = (e) => {
-    const data = {
+    const body = {
       message: input,
       sender: username,
     };
     e.preventDefault();
-    client.send(JSON.stringify(data));
-    axios.post("http://localhost:8000/api/message/", { data }).then((res) => {
-      console.log("res", res);
-    });
+    client.send(JSON.stringify(body));
+    saveMessage(body);
+    setInput("");
   };
   return (
     <div className="chatInput">
@@ -27,6 +27,7 @@ function ChatInput() {
           className="inputBar"
           placeholder="Type here"
           onChange={handleChange}
+          value={input}
         ></input>
         <button className="sendButton" type="submit">
           Send
