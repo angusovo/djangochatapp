@@ -52,11 +52,7 @@ function App() {
   return (
     <div className="App">
       <Header />
-      {isLoggedIn && room.messages.length > 0 ? (
-        <Chatroom messages={room.messages} />
-      ) : (
-        <LoginCard />
-      )}
+      {isLoggedIn ? <Chatroom messages={room.messages} /> : <LoginCard />}
     </div>
   );
 }

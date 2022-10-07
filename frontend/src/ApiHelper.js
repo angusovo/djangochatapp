@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:8000";
+const BASE_URL = "https://django-react-chat-app.herokuapp.com";
 
 export const saveMessage = (body) => {
   axios.post(`${BASE_URL}/api/message/`, { body }).then((res) => {});

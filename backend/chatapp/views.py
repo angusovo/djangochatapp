@@ -21,8 +21,6 @@ def room(request, room_name):
 
 @csrf_exempt
 def userApi(request, id =0):
-    # serializer_class = UserSerializer
-    # queryset = User.objects.all()
     if request.method == 'GET':
         users = User.objects.all()
         users_serializer = UserSerializer(users,many= True)
@@ -30,8 +28,7 @@ def userApi(request, id =0):
 
 @csrf_exempt
 def roomApi(request, id =0):
-    # serializer_class = UserSerializer
-    # queryset = User.objects.all()
+
     if request.method == 'GET':
         rooms = Room.objects.all()
         rooms_serializer = RoomSerializer(rooms,many= True)
@@ -42,8 +39,6 @@ def roomApi(request, id =0):
 @parser_classes((JSONParser,)) 
 
 def messageApi(request, format=None):
-    # serializer_class = UserSerializer
-    # queryset = User.objects.all()
     if request.method == 'GET':
         messages = Message.objects.all()
         messages_serializer = MessageSerializer(messages,many= True)
