@@ -40,7 +40,9 @@ INSTALLED_APPS = [
     'chatapp',
     'corsheaders',
     'rest_framework',
-    'channels'
+    'rest_framework.authtoken',
+    'channels',
+    's3upload'
 ]
 
 MIDDLEWARE = [
@@ -141,4 +143,14 @@ CHANNEL_LAYERS = {
         },
     },
 }
+# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
+AWS_ACCESS_KEY_ID = 'AKIA4TS32RZHHBK7YXON'
+
+AWS_SECRET_ACCESS_KEY = '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'
+
+AWS_STORAGE_BUCKET_NAME = 'django-chat-app-angus'
+
+S3UPLOAD_REGION = 'us-east-2'
+
+DEFAULT_FILE_STORAGE = 'chatapp.file_s3.MediaStorage'

@@ -2,10 +2,13 @@ from pyexpat import model
 from unittest.util import _MAX_LENGTH
 from django.db import models
 # Create your models here.
+from s3upload.fields import S3UploadField
 
 class User(models.Model):
     uname = models.CharField(max_length=32)
     dname = models.CharField(max_length=32)
+    password = models.CharField(max_length=16)
+    url = models.CharField(max_length=100)
 
 class Message(models.Model):
     message = models.CharField(max_length=500)

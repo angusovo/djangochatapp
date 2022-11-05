@@ -1,51 +1,53 @@
-import "./loginCard.css";
+import React from "react";
 import { useState } from "react";
-import { login } from "../ApiHelper";
-function LoginCard() {
+import { createUser } from "../ApiHelper";
+const SignupCard = () => {
   const [loginName, setloginName] = useState("");
   const [password, setPassword] = useState(null);
   const [inValid, setInValid] = useState(false);
+  const [dname, setDname] = useState("");
+  const [file, setFile] = useState(null);
 
-  let onSumbit = (e) => {
-    if (loginName !== "") {
-      e.preventDefault();
-      console.log(password, loginName);
-      // localStorage.setItem("uname", loginName);
-      const body = {
-        username: loginName,
-        password: password,
-      };
-      login(body);
-      window.location.reload();
-    } else {
-      setInValid(true);
-    }
-  };
   let handleNameChange = (e) => {
     setloginName(e.target.value);
   };
+  let handleDisplayNameChange = (e) => {
+    setDname(e.target.value);
+  };
   let handlePwChange = (e) => {
     setPassword(e.target.value);
+  };
+  let fileChange = (e) => {
+    console.log(e.target.files);
+    setFile(e.target.files[0]);
+  };
+  const handleSubmit = async (e) => {
+    console.log("submit");
+    console.log(loginName, password, file);
+
+    const formData = new FormData();
+
+    formData.append("file", file);
+    formData.append("usernmae", loginName);
+    formData.append("dname", dname);
+    formData.append("password", password);
+    e.preventDefault();
+    createUser(formData);
   };
 
   return (
     <div class="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8 h-screen bg-[#242424]">
       <div class="w-full max-w-md space-y-8">
         <div>
-          <img
-            className="mx-auto h-[300px] w-auto"
-            src="https://i.chzbgr.com/full/9195088128/hBCF70164/programmer-meme-white-debugging-t-monkeyusercom"
-            alt="logo"
-          />
           <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-white">
-            Sign in to your account
+            Create your account
           </h2>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={onSumbit}>
+        <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
           <input type="hidden" name="remember" value="true" />
           <div className="-space-y-px rounded-md shadow-sm">
             <div>
-              <label className="sr-only">Email address</label>
+              <label className=" text-white">Email address</label>
               <input
                 onChange={handleNameChange}
                 name="email"
@@ -56,7 +58,18 @@ function LoginCard() {
               />
             </div>
             <div>
-              <label className="sr-only">Password</label>
+              <label className=" text-white">Display Name</label>
+              <input
+                onChange={handleDisplayNameChange}
+                name="dname"
+                type="text"
+                required
+                className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                placeholder="Display Name"
+              />
+            </div>
+            <div>
+              <label className="text-white">Password</label>
               <input
                 id="password"
                 type="password"
@@ -65,6 +78,15 @@ function LoginCard() {
                 placeholder="Password"
                 onChange={handlePwChange}
               />
+            </div>
+            <div>
+              <div className="text-white">Personal Image</div>
+              <div>
+                {file == null ? null : (
+                  <h2 className="text-white">{file.name}</h2>
+                )}
+              </div>
+              <input type="file" className="relative" onChange={fileChange} />
             </div>
           </div>
 
@@ -88,33 +110,13 @@ function LoginCard() {
                   />
                 </svg>
               </span>
-              Sign in
+              Sign Up
             </button>
           </div>
         </form>
-        <div className="text-end text-white text-xl underline">
-          <a href="/signup">New user? Signup</a>
-        </div>
       </div>
     </div>
-    // <div classNameName="loginCard">
-
-    //   <div classNameName="loginCardContainer">
-    //     <h1>Welcome to this chat room</h1>
-    //     <div>
-    //       <p>enter your name</p>
-
-    //       <input onChange={handleChange}></input>
-    //       <div classNameName="submitBtn" onClick={onSumbit}>
-    //         <div classNameName="button"> Enter</div>
-    //       </div>
-    //       {inValid && (
-    //         <div style={{ color: "red" }}>Please enter valid name</div>
-    //       )}
-    //     </div>
-    //   </div>
-    // </div>
   );
-}
+};
 
-export default LoginCard;
+export default SignupCard;

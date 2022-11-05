@@ -5,6 +5,9 @@ import LoginCard from "./component/loginCard";
 import { useState, useEffect, useCallback } from "react";
 import { client } from "./Socket";
 import { getAllMessage } from "./ApiHelper";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
+import SignupCard from "./component/signupCard";
+
 function App() {
   const [room, setRoom] = useState({
     messages: [],
@@ -50,14 +53,20 @@ function App() {
   }, []);
 
   return (
-    <div className="App">
-      <Header />
-      {isLoggedIn && room.messages.length > 0 ? (
-        <Chatroom messages={room.messages} />
-      ) : (
-        <LoginCard />
-      )}
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route exact path="/" element={<LoginCard />} />
+        <Route path="signup" exact element={<SignupCard />} />
+      </Routes>
+      <div className="h-screen bg-[#242424]">
+        {/* <Header /> */}
+        {isLoggedIn && room.messages.length > 0 ? (
+          <Chatroom messages={room.messages} />
+        ) : (
+          <LoginCard />
+        )}
+      </div>
+    </BrowserRouter>
   );
 }
 
