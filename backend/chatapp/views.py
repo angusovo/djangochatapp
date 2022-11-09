@@ -9,10 +9,10 @@ from rest_framework.response import Response
 from django.shortcuts import render
 from rest_framework.decorators import parser_classes
 import json
-from datetime import datetime
+import datetime
 from .encrypt_util import *
 from .file_upload import *
-import os
+import jwt
 from .file_upload import *
 from .file_s3 import MediaStorage
 def index(request):
@@ -58,55 +58,83 @@ class UserApiView(APIView):
                 'message': 'Error: username already exists'
             }, status=400)
 
-        result = FileUploadVToS3.uploadToS3(file_obj,username)
+        # result = FileUploadVToS3.uploadToS3(file_obj,username)
+        #     'dname':dname,
 
-        if not result:
-            return JsonResponse({
-            'message': 'Please check your file type or username',
-            },status=400)
+        # if not result:
+        #     return JsonResponse({
+        #     'message': 'Please check your file type or username',
+        #     },status=400)
 
-        data = {
-            'dname':dname,
-            'uname':username,
-            'password':password,
-            'url': result
+        # data = {
+        #     'uname':username,
+        #     'password':password,
+        #     'url': result
+        # }
+
+        # user = User.objects.create(uname= username, dname=dname, password=password,url=result)
+        user = User.objects.create(uname= username, dname=dname, password=password,url='123')
+
+        payload = {
+            'id' : user.userId,
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=300),
+            'iat':datetime.datetime.utcnow()
         }
 
-        User.objects.create(uname= username, dname=dname, password=password,url=result)
+        token = jwt.encode(payload, 'secret', algorithm='HS256')
         #     serializers = UserSerializer(data=data)
         return JsonResponse({
             'message': 'User Created!',
-            'user':'123'
+            'token':token
         },status=200)
 
 
-@csrf_exempt
-def roomApi(request, id =0):
-    # serializer_class = UserSerializer
-    # queryset = User.objects.all()
-    if request.method == 'GET':
+
+class RoomApiView(APIView):
+
+    # 1. Create new room
+    def post(self, request, *args, **kwargs):
+        body = json.loads(request.body)
+
+        Room.objects.create(name= body['name'])
         rooms = Room.objects.all()
         rooms_serializer = RoomSerializer(rooms,many= True)
-        return JsonResponse(rooms_serializer.data,safe=False)
+        return JsonResponse(rooms_serializer.data,safe=False,status=200)
+        
+    # 2. Get all rooms
+    def get(self, request, *args, **kwargs):
+        
+        rooms = Room.objects.all()
+        rooms_serializer = RoomSerializer(rooms,many= True)
+        return JsonResponse(rooms_serializer.data,safe=False,status=200)
 
 
-@csrf_exempt
-@parser_classes((JSONParser,)) 
+class MessageApiView(APIView):
 
-def messageApi(request, format=None):
-    # serializer_class = UserSerializer
-    # queryset = User.objects.all()
-    if request.method == 'GET':
-        messages = Message.objects.all()
-        messages_serializer = MessageSerializer(messages,many= True)
-        return JsonResponse(messages_serializer.data,safe=False)
-    if request.method == 'POST':
+    # 1. Create new msg
+    def post(self, request, *args, **kwargs):
         body = json.loads(request.body)
         data = body['body']
+        token = jwt.decode(data['token'],'secret',algorithms='HS256')
+        sender = User.objects.filter(userId = token['id']).first()
         messages = Message.objects.all()
+        room = Room.objects.filter(id = data['room']).first()
         messages_serializer = MessageSerializer(messages,many= True)
-        Message.objects.create(message = data['message'], sender = data['sender'], createAt = datetime.now().isoformat())
+        content_type = 'image'
+        Message.objects.create(
+            message = data['message'], 
+            sender_id = sender, 
+            createAt = datetime.datetime.now().isoformat(),
+            content_type = content_type,
+            room_id = room)
         return JsonResponse(messages_serializer.data,safe=False)
+        
+    # 2. Get all message from selected Rm
+    def get(self, request, *args, **kwargs):
+        room_id = request.GET.get('id', None)
+        messages = Message.objects.filter(room_id=room_id)
+        messages_serializer = MessageSerializer(messages,many= True)
+        return JsonResponse(messages_serializer.data,safe=False)    
 
 
 

@@ -1,22 +1,32 @@
-from pyexpat import model
-from unittest.util import _MAX_LENGTH
+from djongo import models
 from django.db import models
-# Create your models here.
-from s3upload.fields import S3UploadField
 
 class User(models.Model):
     uname = models.CharField(max_length=32)
     dname = models.CharField(max_length=32)
     password = models.CharField(max_length=16)
     url = models.CharField(max_length=100)
+    userId = models.BigAutoField(primary_key=True)
+
+    def __str__(self):
+        return self.dname
+
+class Room(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    name = models.CharField(max_length=30, default="channel")
 
 class Message(models.Model):
     message = models.CharField(max_length=500)
     createAt = models.DateTimeField()
-    sender = models.CharField(max_length=32)
-    _id = models.AutoField(primary_key=True)
+    sender_id = models.ForeignKey(User, on_delete=models.CASCADE,related_name='sender')
+    room_id = models.ForeignKey(Room, on_delete=models.CASCADE)
+    content_type = models.CharField(max_length=30)
 
-class Room(models.Model):
-    roomName = models.CharField(max_length=32)
+    # @property
+    # def uname(self):
+    #     return self.sender_id.uname
+    @property
+    def sender_dname(self):
+        return self.sender_id.dname
         
 

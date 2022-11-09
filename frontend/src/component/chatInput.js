@@ -1,18 +1,20 @@
 import "./chatInput.css";
 import { client } from "../Socket";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { saveMessage } from "../ApiHelper";
+import { UserContext } from "../context/Context";
 function ChatInput() {
   const [input, setInput] = useState("");
+  const { selectedRm } = useContext(UserContext);
 
-  const username = localStorage.getItem("uname");
   const handleChange = (e) => {
     setInput(e.target.value);
   };
   const handleSubmit = (e) => {
     const body = {
       message: input,
-      sender: username,
+      room: selectedRm,
+      token: localStorage.getItem("token"),
     };
     e.preventDefault();
     client.send(JSON.stringify(body));

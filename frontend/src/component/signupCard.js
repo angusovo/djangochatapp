@@ -1,13 +1,16 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useState } from "react";
 import { createUser } from "../ApiHelper";
+import { Navigate } from "react-router-dom";
+
+import { UserContext } from "../context/Context";
 const SignupCard = () => {
   const [loginName, setloginName] = useState("");
   const [password, setPassword] = useState(null);
-  const [inValid, setInValid] = useState(false);
   const [dname, setDname] = useState("");
   const [file, setFile] = useState(null);
-
+  const [user, setUser] = useState(null);
+  const { globalUser, setGlobalUser } = useContext(UserContext);
   let handleNameChange = (e) => {
     setloginName(e.target.value);
   };
@@ -18,13 +21,10 @@ const SignupCard = () => {
     setPassword(e.target.value);
   };
   let fileChange = (e) => {
-    console.log(e.target.files);
     setFile(e.target.files[0]);
   };
-  const handleSubmit = async (e) => {
+  let handleSubmit = async (e) => {
     console.log("submit");
-    console.log(loginName, password, file);
-
     const formData = new FormData();
 
     formData.append("file", file);
@@ -32,7 +32,12 @@ const SignupCard = () => {
     formData.append("dname", dname);
     formData.append("password", password);
     e.preventDefault();
-    createUser(formData);
+    let resp = await createUser(formData);
+    if (resp) {
+      setUser(resp);
+      setGlobalUser("testing1234");
+      console.log(globalUser);
+    }
   };
 
   return (
@@ -112,6 +117,7 @@ const SignupCard = () => {
               </span>
               Sign Up
             </button>
+            {user && <Navigate to="/dashboard" replace={true} />}
           </div>
         </form>
       </div>

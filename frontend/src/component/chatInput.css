@@ -1,5 +1,7 @@
 .chatInput {
   height: 10%;
+
+  bottom: 0;
 }
 .chatInput > form {
   display: flex;

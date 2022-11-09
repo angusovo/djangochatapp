@@ -24,8 +24,8 @@ router = routers.DefaultRouter()
 urlpatterns = [
     # path('', admin.site.urls),
     path('api/user/',views.UserApiView.as_view()),
-    re_path(r'^api/message/$',views.messageApi),
-    re_path(r'^api/room/$',views.roomApi),
+    path('api/message/',views.MessageApiView.as_view()),
+    re_path(r'api/rooms/$',views.RoomApiView.as_view()),
     path('api/auth/', views.AuthApiView.as_view()),
     path('chat/', include('chatapp.urls'))
 

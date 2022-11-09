@@ -9,10 +9,12 @@ class UserSerializer(serializers.ModelSerializer):
 class RoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Room
-        fields = ('roomName',)
+        fields = '__all__'
 
 
 class MessageSerializer(serializers.ModelSerializer):
+    sender_dname = serializers.ReadOnlyField()
+    
     class Meta:
         model = Message
-        fields = ('message', 'createAt','sender')
+        fields = '__all__'
