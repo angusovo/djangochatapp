@@ -4,7 +4,7 @@ import { UserContext } from "../context/Context";
 import { getAllRooms } from "../ApiHelper";
 import ChannelBar from "./channelBar";
 
-const Channel = ({ rooms, selectedRm }) => {
+const Channel = ({ rooms, selectedRm, bottom }) => {
   const [search, setSearch] = useState("");
 
   const handleChange = (e) => {
@@ -13,7 +13,7 @@ const Channel = ({ rooms, selectedRm }) => {
 
   return (
     <div className="flex-[0.4] border-r-2">
-      <div className="h-[57px] text-center text-gray-500 flex align-center pl-[15px] justify-center border-b-2 p-2">
+      <div className="h-[70px] text-center text-gray-500 flex align-center pl-[15px] justify-center border-b-2 p-2">
         <input
           className="w-[100%] bg-gray-200 rounded p-2"
           placeholder="Search Chats Here"
@@ -25,9 +25,17 @@ const Channel = ({ rooms, selectedRm }) => {
           ? rooms
               .filter((room) => room.name.includes(search))
               .map((room, key) => (
-                <ChannelBar key={key} name={room.name} id={room.id} />
+                <ChannelBar
+                  key={key}
+                  name={room.name}
+                  id={room.id}
+                  url={room.url}
+                />
               ))
           : null}
+      </div>
+      <div className="h-[calc(10%-70px)] flex items-center justify-center  hover:bg-gray-200">
+        {bottom()}
       </div>
     </div>
   );

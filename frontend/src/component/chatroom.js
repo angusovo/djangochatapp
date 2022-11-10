@@ -5,15 +5,16 @@ import { getRmMessage, getAllRooms } from "../ApiHelper";
 import { useRef, useEffect, useState, useContext } from "react";
 import Channel from "./channel";
 import { UserContext } from "../context/Context";
-import ReactDOM from "react-dom";
-import Modal from "react-modal";
-
+import RoomModal from "./Modal";
+import { client } from "../Socket";
+import { NotificationHandler } from "./NotificationHandler";
+import { Navigate } from "react-router-dom";
 function Chatroom() {
   const chatListRef = useRef(null);
   const [messages, setMessages] = useState([]);
   const [rooms, setRooms] = useState([]);
   const [isOpenModal, setIsOpenModal] = useState(false);
-
+  const [isAuth, setIsAuth] = useState(true);
   useEffect(() => {
     const scroll =
       chatListRef.current.scrollHeight - chatListRef.current.clientHeight;
@@ -28,6 +29,21 @@ function Chatroom() {
       let rooms = await getAllRooms();
       setRooms(rooms);
     })();
+  }, []);
+
+  useEffect(() => {
+    let token = localStorage.getItem("token");
+    let expiredDateTime = localStorage.getItem("TokenExpiredDateTime");
+
+    if (!token || !expiredDateTime) {
+      setIsAuth(false);
+      NotificationHandler("error", `Authentication Failed`, `Token Expired`);
+    }
+
+    if (new Date(expiredDateTime) < new Date()) {
+      setIsAuth(false);
+      NotificationHandler("error", `Authentication Failed`, `Token Expired`);
+    }
   }, []);
 
   useEffect(() => {
@@ -46,19 +62,14 @@ function Chatroom() {
     return rm[0]?.id;
   };
 
-  const customStyles = {
-    content: {
-      top: "50%",
-      left: "50%",
-      right: "auto",
-      bottom: "auto",
-      marginRight: "-50%",
-      transform: "translate(-50%, -50%)",
-      width: "50%",
-      height: "50%",
-    },
+  const handleLogout = () => {
+    client.close();
+    client.onclose = () => {
+      console.log("WebSocket Client Disconnected");
+    };
+    localStorage.clear();
+    setIsAuth(false);
   };
-
   const openModal = () => {
     setIsOpenModal(true);
   };
@@ -67,25 +78,28 @@ function Chatroom() {
     setIsOpenModal(false);
   };
 
-  let subtitle;
-  function afterOpenModal() {
-    subtitle.style.color = "#f00";
-  }
+  client.onmessage = async (message) => {
+    console.log("on message from chatroom");
+    const dataFromServer = JSON.parse(message.data);
+    NotificationHandler(
+      "info",
+      ` ${dataFromServer.message}`,
+      `${dataFromServer.room}# ${dataFromServer.sender}`
+    );
+    let rmMsg = await getRmMessage(selectedRm);
+    setMessages(rmMsg);
+  };
+
+  const createRoomBtn = () => (
+    <button className=" text-black" onClick={openModal}>
+      Create New Chat Room
+    </button>
+  );
   return (
     <div className="flex items-center p-20 justify-center h-screen bg-[#242424]">
       <div className="w-[800px] h-[100%] bg-white border-r-[10px] flex flex-row">
-        <Modal
-          isOpen={isOpenModal}
-          // onAfterOpen={afterOpenModal}
-          onRequestClose={closeModal}
-          style={customStyles}
-          contentLabel="addNewRmModal"
-          ariaHideApp={false}
-        >
-          <h2>hello</h2>
-          <input type={"text"} />
-        </Modal>
-        <Channel rooms={rooms} selectedRm={selectedRm} />
+        <RoomModal isModalOpen={isOpenModal} closeModal={closeModal} />
+        <Channel rooms={rooms} selectedRm={selectedRm} bottom={createRoomBtn} />
         <div className="flex-[0.7] h-[100%] flex flex-col">
           <div className="chatroomHeader">
             <p>Chat Room # {getSelectedRmName()}</p>
@@ -106,12 +120,10 @@ function Chatroom() {
           <ChatInput />
         </div>
       </div>
-      <button
-        className="absolute bottom-10 left-[30%] text-white"
-        onClick={openModal}
-      >
-        Create New Chat Room
-      </button>
+      <div className="text-white absolute right-1 top-1" onClick={handleLogout}>
+        LOGOUT{" "}
+      </div>
+      {!isAuth && <Navigate to="/" replace={true} />}
     </div>
   );
 }

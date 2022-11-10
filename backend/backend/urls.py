@@ -22,7 +22,6 @@ from rest_framework.authtoken.views import obtain_auth_token  # <-- Here
 router = routers.DefaultRouter()
 
 urlpatterns = [
-    # path('', admin.site.urls),
     path('api/user/',views.UserApiView.as_view()),
     path('api/message/',views.MessageApiView.as_view()),
     re_path(r'api/rooms/$',views.RoomApiView.as_view()),

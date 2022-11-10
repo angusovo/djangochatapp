@@ -14,6 +14,7 @@ class User(models.Model):
 class Room(models.Model):
     id = models.BigAutoField(primary_key=True)
     name = models.CharField(max_length=30, default="channel")
+    url = models.CharField(max_length=100, default="")
 
 class Message(models.Model):
     message = models.CharField(max_length=500)
@@ -28,5 +29,8 @@ class Message(models.Model):
     @property
     def sender_dname(self):
         return self.sender_id.dname
+    @property
+    def sender_url(self):
+        return self.sender_id.url
         
 

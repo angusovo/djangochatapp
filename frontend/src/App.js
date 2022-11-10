@@ -16,7 +16,7 @@ import SignupCard from "./component/signupCard";
 import { unstable_HistoryRouter as HistoryRouter } from "react-router-dom";
 import history from "./history";
 import { UserContext } from "./context/Context";
-
+import { NotificationContainer } from "react-notifications";
 function App() {
   const [room, setRoom] = useState({
     messages: [],
@@ -30,24 +30,7 @@ function App() {
     client.onopen = () => {
       console.log("WebSocket Client Connected");
     };
-    client.onmessage = (message) => {
-      console.log("on message", message.data);
-      const dataFromServer = JSON.parse(message.data);
-      if (dataFromServer) {
-        setRoom((state) => ({
-          messages: [
-            ...state.messages,
-            {
-              message: dataFromServer.message,
-              sender: dataFromServer.sender,
-            },
-          ],
-          name: dataFromServer.message,
-        }));
-      }
-    };
-    return () => {};
-  }, [room]);
+  }, []);
 
   return (
     <HistoryRouter history={history}>
@@ -57,6 +40,7 @@ function App() {
           <Route path="signup" exact element={<SignupCard />} />
           <Route path="dashboard" exact element={<Chatroom />} />
         </Routes>
+        <NotificationContainer />
       </UserContext.Provider>
     </HistoryRouter>
   );

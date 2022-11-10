@@ -14,7 +14,7 @@ class RoomSerializer(serializers.ModelSerializer):
 
 class MessageSerializer(serializers.ModelSerializer):
     sender_dname = serializers.ReadOnlyField()
-    
+    sender_url = serializers.ReadOnlyField()
     class Meta:
         model = Message
         fields = '__all__'

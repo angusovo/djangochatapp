@@ -1,24 +1,26 @@
 import "./loginCard.css";
 import { useState } from "react";
 import { login } from "../ApiHelper";
+import { Navigate } from "react-router-dom";
+import { connect, client } from "../Socket";
+import { w3cwebsocket as W3CWebSocket } from "websocket";
+
 function LoginCard() {
   const [loginName, setloginName] = useState("");
   const [password, setPassword] = useState(null);
-  const [inValid, setInValid] = useState(false);
+  const [isAuth, setIsAuth] = useState(false);
 
-  let onSumbit = (e) => {
+  let onSumbit = async (e) => {
     if (loginName !== "") {
       e.preventDefault();
-      console.log(password, loginName);
-      // localStorage.setItem("uname", loginName);
       const body = {
-        username: loginName,
+        uname: loginName,
         password: password,
       };
-      login(body);
-      window.location.reload();
-    } else {
-      setInValid(true);
+      let resp = await login(body);
+      if (resp.status == 200) {
+        setIsAuth(true);
+      }
     }
   };
   let handleNameChange = (e) => {
@@ -29,8 +31,8 @@ function LoginCard() {
   };
 
   return (
-    <div class="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8 h-screen bg-[#242424]">
-      <div class="w-full max-w-md space-y-8">
+    <div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8 h-screen bg-[#242424]">
+      <div className="w-full max-w-md space-y-8">
         <div>
           <img
             className="mx-auto h-[300px] w-auto"
@@ -96,24 +98,8 @@ function LoginCard() {
           <a href="/signup">New user? Signup</a>
         </div>
       </div>
+      {isAuth && <Navigate to="/dashboard" replace={true} />}
     </div>
-    // <div classNameName="loginCard">
-
-    //   <div classNameName="loginCardContainer">
-    //     <h1>Welcome to this chat room</h1>
-    //     <div>
-    //       <p>enter your name</p>
-
-    //       <input onChange={handleChange}></input>
-    //       <div classNameName="submitBtn" onClick={onSumbit}>
-    //         <div classNameName="button"> Enter</div>
-    //       </div>
-    //       {inValid && (
-    //         <div style={{ color: "red" }}>Please enter valid name</div>
-    //       )}
-    //     </div>
-    //   </div>
-    // </div>
   );
 }
 

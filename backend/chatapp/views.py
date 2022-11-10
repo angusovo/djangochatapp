@@ -1,20 +1,14 @@
 from .serializer import *
 from .models import *
-from django.views.decorators.csrf import csrf_exempt
-from rest_framework.parsers import JSONParser
-from rest_framework import status
 from rest_framework.views import APIView
 from django.http.response import JsonResponse
-from rest_framework.response import Response
 from django.shortcuts import render
-from rest_framework.decorators import parser_classes
 import json
 import datetime
 from .encrypt_util import *
 from .file_upload import *
 import jwt
 from .file_upload import *
-from .file_s3 import MediaStorage
 def index(request):
     return render(request, 'chatapp/index.html')
 
@@ -27,22 +21,43 @@ class AuthApiView(APIView):
     # add permission to check if user is authenticated
     # permission_classes = [permissions.IsAuthenticated]
 
-    # 1. List all
+    # 1. Login
     def post(self, request, *args, **kwargs):
-        '''
-        
-        '''
         body = json.loads(request.body)
-        user = User.objects.get(uname = body['username'])
-        print(user.uname)
-        # serializer = TodoSerializer(todos, many=True)
-        return Response('123', status=status.HTTP_200_OK)
+        uname = body['uname']
+        password = body['password']
+
+        user = User.objects.filter(uname = uname).first()
+
+        if not user:
+            return JsonResponse({
+                'message': 'User not found!',
+            },status=400)    
+
+        if user.password == password:
+
+            payload = {
+            'id' : user.userId,
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=300),
+            'iat':datetime.datetime.utcnow()
+            }
+
+            token = jwt.encode(payload, 'secret', algorithm='HS256')
+            #     serializers = UserSerializer(data=data)
+            return JsonResponse({
+                'message': 'User Created!',
+                'token':token
+            },status=200)
+
+        else:
+            return JsonResponse({
+                'message': 'Password not match!',
+            },status=400)       
+        
 
 class UserApiView(APIView):
-    # add permission to check if user is authenticated
-    # permission_classes = [permissions.IsAuthenticated]
 
-    # 1. List all
+    # 1. create User
     def post(self, request, *args, **kwargs):
         # Create User    
         username = request.POST.get('usernmae')
@@ -58,22 +73,20 @@ class UserApiView(APIView):
                 'message': 'Error: username already exists'
             }, status=400)
 
-        # result = FileUploadVToS3.uploadToS3(file_obj,username)
-        #     'dname':dname,
+        result = FileUploadVToS3.uploadToS3(file_obj,username)
 
-        # if not result:
-        #     return JsonResponse({
-        #     'message': 'Please check your file type or username',
-        #     },status=400)
+        if not result:
+            return JsonResponse({
+            'message': 'Please check your file type or username',
+            },status=400)
 
-        # data = {
-        #     'uname':username,
-        #     'password':password,
-        #     'url': result
-        # }
+        data = {
+            'uname':username,
+            'password':password,
+            'url': result
+        }
 
-        # user = User.objects.create(uname= username, dname=dname, password=password,url=result)
-        user = User.objects.create(uname= username, dname=dname, password=password,url='123')
+        user = User.objects.create(uname= username, dname=dname, password=password,url=result)
 
         payload = {
             'id' : user.userId,
@@ -82,7 +95,6 @@ class UserApiView(APIView):
         }
 
         token = jwt.encode(payload, 'secret', algorithm='HS256')
-        #     serializers = UserSerializer(data=data)
         return JsonResponse({
             'message': 'User Created!',
             'token':token
@@ -94,12 +106,26 @@ class RoomApiView(APIView):
 
     # 1. Create new room
     def post(self, request, *args, **kwargs):
-        body = json.loads(request.body)
+        rmName = request.POST.get('rmName')
+        file_obj = request.FILES.get('file', '')
+        # print(file_obj)
+        room = Room.objects.filter(name=rmName).first()
+        
+        if room:
+            # username alreay exist
+            return JsonResponse({
+                'message': 'Error: roomname already exists'
+            }, status=400)
 
-        Room.objects.create(name= body['name'])
-        rooms = Room.objects.all()
-        rooms_serializer = RoomSerializer(rooms,many= True)
-        return JsonResponse(rooms_serializer.data,safe=False,status=200)
+        result = FileUploadVToS3.uploadToS3(file_obj,rmName)
+
+        if not result:
+            return JsonResponse({
+            'message': 'Please check your file type or roomName',
+            },status=400)
+
+        room = Room.objects.create(name=rmName, url=result)
+        return JsonResponse({'message':'Chat Room created Successfully'},safe=False,status=200)
         
     # 2. Get all rooms
     def get(self, request, *args, **kwargs):

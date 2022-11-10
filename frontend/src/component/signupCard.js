@@ -35,8 +35,6 @@ const SignupCard = () => {
     let resp = await createUser(formData);
     if (resp) {
       setUser(resp);
-      setGlobalUser("testing1234");
-      console.log(globalUser);
     }
   };
 
