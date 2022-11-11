@@ -45,6 +45,7 @@ const RoomModal = ({ isModalOpen, closeModal, refresh }) => {
     if (resp.status == 200) {
       NotificationHandler("success", resp.data.message);
       closeModal();
+      refresh();
     } else {
       closeModal();
       NotificationHandler("error", resp.message);
