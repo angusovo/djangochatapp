@@ -83,10 +83,11 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'djongo',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'chatapp',
+        'USER': 'admin',
         'HOST': '127.0.0.1',
-        'PORT': 27017,
+        'PORT': '5432',
     }
 }
 
