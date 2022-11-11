@@ -4,15 +4,17 @@ from .models import *
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('dname', 'uname')
+        fields = '__all__'
 
 class RoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Room
-        fields = ('roomName',)
+        fields = '__all__'
 
 
 class MessageSerializer(serializers.ModelSerializer):
+    sender_dname = serializers.ReadOnlyField()
+    sender_url = serializers.ReadOnlyField()
     class Meta:
         model = Message
-        fields = ('message', 'createAt','sender')
+        fields = '__all__'

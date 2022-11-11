@@ -17,13 +17,16 @@ from django.contrib import admin
 from django.urls import path , include, re_path
 from rest_framework import routers
 from chatapp import views
+from rest_framework.authtoken.views import obtain_auth_token  # <-- Here
 
 router = routers.DefaultRouter()
 
 urlpatterns = [
-    # path('', admin.site.urls),
-    re_path(r'^api/user/$',views.userApi),
-    re_path(r'^api/message/$',views.messageApi),
-    re_path(r'^api/room/$',views.roomApi),
+    path('api/user/',views.UserApiView.as_view()),
+    path('api/mediamsg/',views.UploadImageMessageApiView.as_view()),
+    path('api/message/',views.MessageApiView.as_view()),
+    re_path(r'api/rooms/$',views.RoomApiView.as_view()),
+    path('api/auth/', views.AuthApiView.as_view()),
     path('chat/', include('chatapp.urls'))
+
 ]

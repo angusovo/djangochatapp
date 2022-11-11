@@ -40,7 +40,9 @@ INSTALLED_APPS = [
     'chatapp',
     'corsheaders',
     'rest_framework',
-    'channels'
+    'rest_framework.authtoken',
+    'channels',
+    's3upload'
 ]
 
 MIDDLEWARE = [
@@ -135,6 +137,17 @@ STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 ASGI_APPLICATION = "backend.asgi.application" 
+
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+
+AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
+
+S3UPLOAD_REGION = 'us-east-2'
+
+DEFAULT_FILE_STORAGE = 'chatapp.file_s3.MediaStorage'
+
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',

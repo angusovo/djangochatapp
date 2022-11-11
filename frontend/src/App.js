@@ -2,58 +2,47 @@ import "./App.css";
 import Header from "./component/header";
 import Chatroom from "./component/chatroom";
 import LoginCard from "./component/loginCard";
-import { useState, useEffect, useCallback } from "react";
+import {
+  useState,
+  useEffect,
+  useCallback,
+  useContext,
+  createContext,
+} from "react";
 import { client } from "./Socket";
-import { getAllMessage } from "./ApiHelper";
+import { getAllChannels } from "./ApiHelper";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
+import SignupCard from "./component/signupCard";
+import { unstable_HistoryRouter as HistoryRouter } from "react-router-dom";
+import history from "./history";
+import { UserContext } from "./context/Context";
+import { NotificationContainer } from "react-notifications";
 function App() {
   const [room, setRoom] = useState({
     messages: [],
   });
-  const [isLoggedIn, setisLoggedIn] = useState(false);
 
+  const [isLoggedIn, setisLoggedIn] = useState(false);
+  const [globalUser, setGlobalUser] = useState(null);
+  const [selectedRm, setSelectedRm] = useState(1);
+  const value = { globalUser, setGlobalUser, selectedRm, setSelectedRm };
   useEffect(() => {
     client.onopen = () => {
       console.log("WebSocket Client Connected");
     };
-    client.onmessage = (message) => {
-      console.log("on message", message.data);
-      const dataFromServer = JSON.parse(message.data);
-      if (dataFromServer) {
-        setRoom((state) => ({
-          messages: [
-            ...state.messages,
-            {
-              message: dataFromServer.message,
-              sender: dataFromServer.sender,
-            },
-          ],
-          name: dataFromServer.message,
-        }));
-      }
-    };
-    return () => {};
-  }, [room]);
-
-  const fetchMessage = useCallback(async () => {
-    let data = await getAllMessage();
-    setRoom((state) => ({
-      messages: data,
-    }));
-  }, []);
-
-  useEffect(() => {
-    fetchMessage();
-    let uname = localStorage.getItem("uname");
-    if (uname) {
-      setisLoggedIn(true);
-    }
   }, []);
 
   return (
-    <div className="App">
-      <Header />
-      {isLoggedIn ? <Chatroom messages={room.messages} /> : <LoginCard />}
-    </div>
+    <HistoryRouter history={history}>
+      <UserContext.Provider value={value}>
+        <Routes>
+          <Route exact path="/" element={<LoginCard />} />
+          <Route path="signup" exact element={<SignupCard />} />
+          <Route path="dashboard" exact element={<Chatroom />} />
+        </Routes>
+        <NotificationContainer />
+      </UserContext.Provider>
+    </HistoryRouter>
   );
 }
 

@@ -14,12 +14,11 @@
 }
 
 .chatroomHeader {
-  border-radius: 10px 10px 0px 0px;
-  height: 10%;
+  height: 5%;
   background-color: rgb(72, 138, 199);
   color: white;
   display: flex;
-  justify-content: start;
+  justify-content: space-between;
   align-items: center;
   font-size: 1.5rem;
   padding-left: 15px;
@@ -27,7 +26,7 @@
 }
 
 .chatroomList {
-  height: 80%;
+  height: 85%;
   overflow: scroll;
 }
 

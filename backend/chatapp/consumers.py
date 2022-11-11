@@ -30,6 +30,7 @@ class ChatConsumer(WebsocketConsumer):
     # Receive message from WebSocket
     def receive(self, text_data):
         text_data_json = json.loads(text_data)
+        room = await self.get_room(text_data_json['room'])
         message = text_data_json['message']
         sender = text_data_json['sender']
 
@@ -39,13 +40,14 @@ class ChatConsumer(WebsocketConsumer):
            {
                 'type': 'chat_message',
                 'message': message,
-                'sender': sender,
+                'sender': sender.dname,
+                'room':room.name,
                 'createAt':datetime.now().isoformat()
             }
         )
 
     # Receive message from room group
-    def chat_message(self, event):
+    async def chat_message(self, event):
         message = event['message']
         sender =  event['sender']
 
@@ -53,6 +55,7 @@ class ChatConsumer(WebsocketConsumer):
         self.send(text_data=json.dumps({
             'message': message,
             'sender' : sender,
+            'room':room,
             'createAt':datetime.now().isoformat()
         }))
 
