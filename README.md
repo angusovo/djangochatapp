@@ -27,7 +27,9 @@ Adding notification for handling errors as well as incoming messages
 
 <br/>
 <br/>
-
+<img width="500" src="https://django-chat-app-angus.s3.us-east-2.amazonaws.com/Screenshot+2022-11-10+at+11.45.01+PM.png"></img>
+<img width="500" src="https://django-chat-app-angus.s3.us-east-2.amazonaws.com/Screenshot+2022-11-10+at+11.46.01+PM.png"></img>
+<br/>
 Deployed both front end and backend on Heroku for demo:
 
 https://rocky-refuge-88943.herokuapp.com/
