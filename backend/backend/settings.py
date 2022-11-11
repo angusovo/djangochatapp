@@ -80,16 +80,14 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
-  'default': {  
-    'ENGINE':'djongo',
-    'NAME':'chatapp',
-    'CLIENT': {
-      'host': os.environ.get('DB_URL'),
-      'port': 27017,
-      'username': os.environ.get('DB_USERNAME'),
-      'password': os.environ.get('DB_PWD'),
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'chatapp',
+        'USER': os.environ.get('DATABASE_USER'),
+        'PASSWORD': os.environ.get('DATABASE_USER_PW'),
+        'HOST': os.environ.get('DATABASE_HOST'),
+        'PORT': '5432',
     }
-  },
 }
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
