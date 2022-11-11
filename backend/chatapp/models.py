@@ -21,8 +21,8 @@ class Message(models.Model):
     createAt = models.DateTimeField()
     sender_id = models.ForeignKey(User, on_delete=models.CASCADE,related_name='sender')
     room_id = models.ForeignKey(Room, on_delete=models.CASCADE)
-    content_type = models.CharField(max_length=30)
-
+    content_type = models.CharField(max_length=30,default='text')
+    url = models.CharField(max_length=100,default='')
     # @property
     # def uname(self):
     #     return self.sender_id.uname

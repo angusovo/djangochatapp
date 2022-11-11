@@ -118,3 +118,24 @@ export const createNewRooms = async (body) => {
     );
   }
 };
+
+export const saveMediaMessage = async (body) => {
+  try {
+    let headers = { "Content-Type": "multipart/form-data" };
+    let resp = await axios({
+      method: "post",
+      url: `${BASE_URL}/api/mediamsg/`,
+      data: body,
+      headers: headers,
+    });
+    if (resp.status == 200) {
+      return resp;
+    }
+  } catch (err) {
+    NotificationHandler(
+      "error",
+      err.response.data.message,
+      "Error in creating user"
+    );
+  }
+};

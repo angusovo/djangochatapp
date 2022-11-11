@@ -9,12 +9,14 @@ import RoomModal from "./Modal";
 import { client } from "../Socket";
 import { NotificationHandler } from "./NotificationHandler";
 import { Navigate } from "react-router-dom";
+import cross from "../asset/crossIcon.png";
 function Chatroom() {
   const chatListRef = useRef(null);
   const [messages, setMessages] = useState([]);
   const [rooms, setRooms] = useState([]);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isAuth, setIsAuth] = useState(true);
+  const [preview, setPreview] = useState(null);
   useEffect(() => {
     const scroll =
       chatListRef.current.scrollHeight - chatListRef.current.clientHeight;
@@ -62,6 +64,12 @@ function Chatroom() {
     return rm[0]?.id;
   };
 
+  const refresh = async () => {
+    let rooms = await getAllRooms();
+    setRooms(rooms);
+    let rmMsg = await getRmMessage(selectedRm);
+    setMessages(rmMsg);
+  };
   const handleLogout = () => {
     client.close();
     client.onclose = () => {
@@ -76,6 +84,10 @@ function Chatroom() {
 
   const closeModal = () => {
     setIsOpenModal(false);
+  };
+
+  const onClosePreview = () => {
+    setPreview(null);
   };
 
   client.onmessage = async (message) => {
@@ -95,10 +107,25 @@ function Chatroom() {
       Create New Chat Room
     </button>
   );
+
+  const previewContainer = () => (
+    <div className="flex justify-center items-center flex-col bg-gray-100 h-[100%] p-5">
+      <img
+        src={cross}
+        className="w-10 absolute right-[6rem] top-[10rem]"
+        onClick={onClosePreview}
+      />
+      <img src={preview} />
+    </div>
+  );
   return (
     <div className="flex items-center p-20 justify-center h-screen bg-[#242424]">
       <div className="w-[800px] h-[100%] bg-white border-r-[10px] flex flex-row">
-        <RoomModal isModalOpen={isOpenModal} closeModal={closeModal} />
+        <RoomModal
+          isModalOpen={isOpenModal}
+          closeModal={closeModal}
+          refresh={refresh}
+        />
         <Channel rooms={rooms} selectedRm={selectedRm} bottom={createRoomBtn} />
         <div className="flex-[0.7] h-[100%] flex flex-col">
           <div className="chatroomHeader">
@@ -107,6 +134,7 @@ function Chatroom() {
           </div>
           <div className="chatroomList" ref={chatListRef}>
             {messages.length > 0 &&
+              !preview &&
               messages.map((msg, id) => (
                 <ChatMessage
                   key={id}
@@ -114,14 +142,18 @@ function Chatroom() {
                   createAt={msg.createAt}
                   sender={msg.sender_dname}
                   message={msg.message}
+                  url={msg.sender_url}
+                  file_path={msg.url}
+                  content_type={msg.content_type}
                 />
               ))}
+            {preview && previewContainer()}
           </div>
-          <ChatInput />
+          <ChatInput preview={preview} setPreview={setPreview} />
         </div>
       </div>
       <div className="text-white absolute right-1 top-1" onClick={handleLogout}>
-        LOGOUT{" "}
+        LOGOUT
       </div>
       {!isAuth && <Navigate to="/" replace={true} />}
     </div>

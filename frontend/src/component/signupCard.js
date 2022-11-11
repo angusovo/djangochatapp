@@ -89,7 +89,12 @@ const SignupCard = () => {
                   <h2 className="text-white">{file.name}</h2>
                 )}
               </div>
-              <input type="file" className="relative" onChange={fileChange} />
+              <input
+                type="file"
+                className="relative"
+                onChange={fileChange}
+                required
+              />
             </div>
           </div>
 

@@ -6,16 +6,16 @@ from django.http import JsonResponse
 from .file_s3 import MediaStorage
 
 class FileUploadVToS3(View):
-    def uploadToS3(file_obj, username, **kwargs):
-
-        file_directory_within_bucket = 'user_pic/{username}'.format(username=username)
+    def uploadToS3(file_obj, username,path, **kwargs):
+        
+        file_directory_within_bucket = '{path}/{username}'.format(username=username,path=path)
 
         # synthesize a full file path; note that we included the filename
         file_path_within_bucket = os.path.join(
             file_directory_within_bucket,
             file_obj.name
         )
-        if file_obj.content_type != ('image/jpeg' and 'image/png'):
+        if file_obj.content_type not in ['image/jpeg','image/png']:
             return False
 
         media_storage = MediaStorage()

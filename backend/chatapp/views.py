@@ -73,7 +73,7 @@ class UserApiView(APIView):
                 'message': 'Error: username already exists'
             }, status=400)
 
-        result = FileUploadVToS3.uploadToS3(file_obj,username)
+        result = FileUploadVToS3.uploadToS3(file_obj,username,'user_pic')
 
         if not result:
             return JsonResponse({
@@ -117,7 +117,7 @@ class RoomApiView(APIView):
                 'message': 'Error: roomname already exists'
             }, status=400)
 
-        result = FileUploadVToS3.uploadToS3(file_obj,rmName)
+        result = FileUploadVToS3.uploadToS3(file_obj,rmName,'room_pic')
 
         if not result:
             return JsonResponse({
@@ -163,4 +163,32 @@ class MessageApiView(APIView):
         return JsonResponse(messages_serializer.data,safe=False)    
 
 
+class UploadImageMessageApiView(APIView):
 
+    # 1. Create new msg
+    def post(self, request, *args, **kwargs):
+        room = request.POST.get('room')
+        token = jwt.decode(request.POST.get('token'),'secret',algorithms='HS256')
+        content_type = 'image'
+        message = request.POST.get('message')
+        sender = User.objects.filter(userId = token['id']).first()
+
+        file_obj = request.FILES.get('file', '')
+        # print(file_obj)
+        room = Room.objects.filter(id = room).first()
+        result = FileUploadVToS3.uploadToS3(file_obj,room.name,'chat_message')
+
+        if not result:
+            return JsonResponse({
+            'message': 'Please check your file type',
+            },status=400)
+
+        Message.objects.create(
+            message = message, 
+            sender_id = sender, 
+            createAt = datetime.datetime.now().isoformat(),
+            content_type = content_type,
+            url = result,
+            room_id = room),
+            
+        return JsonResponse({'message':'Message created Successfully'},safe=False,status=200)

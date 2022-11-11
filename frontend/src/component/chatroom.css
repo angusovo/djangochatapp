@@ -14,7 +14,7 @@
 }
 
 .chatroomHeader {
-  height: 70px;
+  height: 5%;
   background-color: rgb(72, 138, 199);
   color: white;
   display: flex;
@@ -26,7 +26,7 @@
 }
 
 .chatroomList {
-  height: 100%;
+  height: 85%;
   overflow: scroll;
 }
 

@@ -23,6 +23,7 @@ router = routers.DefaultRouter()
 
 urlpatterns = [
     path('api/user/',views.UserApiView.as_view()),
+    path('api/mediamsg/',views.UploadImageMessageApiView.as_view()),
     path('api/message/',views.MessageApiView.as_view()),
     re_path(r'api/rooms/$',views.RoomApiView.as_view()),
     path('api/auth/', views.AuthApiView.as_view()),

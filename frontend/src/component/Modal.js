@@ -4,7 +4,7 @@ import { useRef, useEffect, useState, useContext } from "react";
 import Modal from "react-modal";
 import { createNewRooms } from "../ApiHelper";
 import { NotificationHandler } from "./NotificationHandler";
-const RoomModal = ({ isModalOpen, closeModal }) => {
+const RoomModal = ({ isModalOpen, closeModal, refresh }) => {
   const customStyles = {
     content: {
       top: "50%",
@@ -31,6 +31,10 @@ const RoomModal = ({ isModalOpen, closeModal }) => {
     const objectUrl = URL.createObjectURL(e.target.files[0]);
     setPreview(objectUrl);
   };
+  let clearAllState = () => {
+    setFile(null);
+    setPreview(null);
+  };
   let handleSubmit = async (e) => {
     const formData = new FormData();
 
@@ -44,12 +48,19 @@ const RoomModal = ({ isModalOpen, closeModal }) => {
     } else {
       closeModal();
       NotificationHandler("error", resp.message);
+      refresh();
     }
+  };
+
+  const handleCloseModal = () => {
+    closeModal();
+    clearAllState();
+    refresh();
   };
   return (
     <Modal
       isOpen={isModalOpen}
-      onRequestClose={closeModal}
+      onRequestClose={handleCloseModal}
       style={customStyles}
       contentLabel="addNewRmModal"
       ariaHideApp={false}

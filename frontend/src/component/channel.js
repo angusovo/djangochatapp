@@ -12,15 +12,15 @@ const Channel = ({ rooms, selectedRm, bottom }) => {
   };
 
   return (
-    <div className="flex-[0.4] border-r-2">
-      <div className="h-[70px] text-center text-gray-500 flex align-center pl-[15px] justify-center border-b-2 p-2">
+    <div className="flex-[0.4] border-r-2 h-[100%]">
+      <div className="h-[5%] text-center text-gray-500 flex align-center pl-[15px] justify-center border-b-2 p-2">
         <input
           className="w-[100%] bg-gray-200 rounded p-2"
           placeholder="Search Chats Here"
           onChange={handleChange}
         />
       </div>
-      <div className="h-[90%] overflow-auto">
+      <div className="h-[85%] overflow-auto">
         {rooms.length > 0
           ? rooms
               .filter((room) => room.name.includes(search))
@@ -34,7 +34,7 @@ const Channel = ({ rooms, selectedRm, bottom }) => {
               ))
           : null}
       </div>
-      <div className="h-[calc(10%-70px)] flex items-center justify-center  hover:bg-gray-200">
+      <div className="h-[10%] flex items-center justify-center  hover:bg-gray-200 bottom-0">
         {bottom()}
       </div>
     </div>
